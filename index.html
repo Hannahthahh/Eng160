@@ -1,0 +1,1130 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Writing Portfolio — Nguyen Thi Thanh Truc</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ── GLOBAL TOKENS ── */
+    :root {
+      --cream: #eceef0;
+      --ink:   #1e2530;
+      --blue:  #7b9bae;
+      --teal:  #3d6070;
+      --sage:  #8aabb5;
+      --pale:  #dde4e9;
+      --mid:   #5c7a8a;
+
+      /* Page accent palettes */
+      --home-accent:    rgba(123,155,174,0.7);
+      --note-accent:    #a3b899;   /* soft sage green */
+      --note-bg:        #f0f4ef;
+      --blog-accent:    #c2855a;   /* warm spice */
+      --blog-bg:        #f8f2ec;
+      --rhet-accent:    #7070a8;   /* dusty violet */
+      --rhet-bg:        #f2f2f8;
+      --prop-accent:    #5a8a7a;   /* academic green */
+      --prop-bg:        #eef4f2;
+      --refl-accent:    #9b7ea8;   /* soft lavender-mauve */
+      --refl-bg:        #f5f0f8;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.1rem 3rem;
+      background: rgba(236,238,240,0.88);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(123,155,174,0.25);
+      transition: background 0.3s;
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem; font-style: italic;
+      color: var(--teal); letter-spacing: 0.03em;
+      cursor: pointer; transition: color 0.2s;
+    }
+    .nav-logo:hover { color: var(--blog-accent); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--mid); text-decoration: none; font-weight: 500;
+      position: relative; padding-bottom: 2px;
+      transition: color 0.2s;
+    }
+    .nav-links a::after {
+      content:''; position:absolute; bottom:0; left:0; width:0; height:1px;
+      background: var(--teal); transition: width 0.25s;
+    }
+    .nav-links a:hover { color: var(--teal); }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* ── PAGES ── */
+    .page {
+      min-height: 100vh; width: 100%;
+      display: none; flex-direction: column;
+      padding-top: 68px;
+    }
+    .page.active { display: flex; }
+
+    /* =========================================
+       HOME PAGE
+    ========================================= */
+    #home {
+      align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+    }
+    /* Photo wallpaper */
+    .home-bg {
+      position: absolute; inset: 0;
+      background-image: url('bgopen.jpg');
+      background-size: cover;
+      background-position: center;
+    }
+    /* Soft light veil */
+    .home-bg::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(
+        160deg,
+        rgba(240,243,245,0.45) 0%,
+        rgba(220,230,236,0.3) 50%,
+        rgba(200,218,228,0.5) 100%
+      );
+    }
+
+    /* Floating leaf / petal particles */
+    .particles {
+      position: absolute; inset: 0; pointer-events: none; z-index: 1;
+      overflow: hidden;
+    }
+    .particle {
+      position: absolute;
+      border-radius: 50% 0 50% 0;
+      opacity: 0;
+      animation: floatUp var(--dur, 8s) var(--delay, 0s) ease-in infinite;
+    }
+    @keyframes floatUp {
+      0%   { opacity:0; transform: translateY(100%) translateX(0) rotate(0deg); }
+      10%  { opacity: var(--op, 0.4); }
+      90%  { opacity: var(--op, 0.4); }
+      100% { opacity:0; transform: translateY(-120vh) translateX(var(--drift, 40px)) rotate(360deg); }
+    }
+
+    /* Decorative corner frame lines */
+    .home-frame {
+      position: absolute; inset: 1.5rem; pointer-events: none; z-index: 2;
+    }
+    .home-frame::before, .home-frame::after {
+      content: ''; position: absolute;
+      border: 1px solid rgba(123,155,174,0.35);
+    }
+    .home-frame::before { top:0; left:0; width:80px; height:80px; border-right:none; border-bottom:none; }
+    .home-frame::after  { bottom:0; right:0; width:80px; height:80px; border-left:none; border-top:none; }
+
+    /* Horizontal accent rules */
+    .home-rule-top {
+      position: absolute; top: 88px; left: 3rem; right: 3rem; z-index: 2;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(123,155,174,0.6), transparent);
+    }
+    .home-rule-bottom {
+      position: absolute; bottom: 3rem; left: 3rem; right: 3rem; z-index: 2;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(123,155,174,0.6), transparent);
+    }
+
+    .home-content {
+      text-align: center; position: relative; z-index: 3;
+      animation: fadeUp 1.2s cubic-bezier(.22,1,.36,1) both;
+    }
+    .home-eyebrow {
+      font-size: 0.65rem; letter-spacing: 0.32em; text-transform: uppercase;
+      color: var(--teal); margin-bottom: 1.2rem; opacity: 0.9;
+      animation: fadeUp 1s 0.2s both;
+    }
+    .home-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3rem, 7vw, 6.5rem);
+      line-height: 1.05; font-weight: 700;
+      color: var(--ink); margin-bottom: 0.5rem;
+      text-shadow: 0 2px 20px rgba(255,255,255,0.5);
+      animation: fadeUp 1s 0.35s both;
+    }
+    .home-title em { font-style: italic; color: var(--teal); }
+    .home-sub {
+      font-family: 'Playfair Display', serif; font-style: italic;
+      font-size: clamp(1rem, 1.8vw, 1.35rem);
+      color: var(--mid); margin-bottom: 0.6rem;
+      animation: fadeUp 1s 0.5s both;
+    }
+    .home-desc {
+      max-width: 380px; margin: 0 auto 2.5rem;
+      font-size: 0.88rem; line-height: 1.8; color: var(--mid);
+      animation: fadeUp 1s 0.65s both;
+    }
+    .home-cta {
+      display: inline-block; padding: 0.85rem 2.5rem;
+      border: 1.5px solid var(--teal); color: var(--teal);
+      font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
+      cursor: pointer; transition: all 0.3s;
+      background: rgba(255,255,255,0.35);
+      backdrop-filter: blur(4px);
+      font-family: 'DM Sans', sans-serif; font-weight: 500;
+      animation: fadeUp 1s 0.8s both;
+      position: relative; overflow: hidden;
+    }
+    .home-cta::before {
+      content:''; position:absolute; inset:0;
+      background: var(--teal); transform:scaleX(0); transform-origin:left;
+      transition: transform 0.3s ease; z-index:-1;
+    }
+    .home-cta:hover { color:#fff; border-color: var(--teal); }
+    .home-cta:hover::before { transform:scaleX(1); }
+
+    .home-ornament {
+      position: absolute; bottom: 5.5rem; z-index: 3;
+      font-size: 0.65rem; letter-spacing: 0.22em; color: var(--mid);
+      text-transform: uppercase; animation: pulse 2.5s ease-in-out infinite;
+    }
+
+    /* =========================================
+       AUTHOR'S NOTE  –  sage green palette
+    ========================================= */
+    #authors-note {
+      background-image:(--note-accent);
+      background-size: cover;
+      background-position: center;
+    }
+
+    #authors-note .section-header {
+      border-bottom-color: rgba(163,184,153,0.4);
+	       background: linear-gradient(90deg, transparent 60%, rgba(163,184,153,0.12));
+    }
+    #authors-note .section-tag  { color: var(--note-accent); }
+    #authors-note .section-tag::after { background: var(--note-accent); }
+    #authors-note .section-title em { color: var(--note-accent); }
+    #authors-note .note-intro { color: var(--note-accent); }
+    #authors-note .note-signature { border-top-color: rgba(163,184,153,0.4); color: #6a836a; }
+    /* Decorative dot grid backdrop */
+    #authors-note::before {
+      content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+      background-size: 28px 28px;
+    }
+    #authors-note .note-body { position: relative; z-index:1; }
+
+    /* =========================================
+       BLOG  –  warm spice / saffron palette
+    ========================================= */
+    #blog { background: var(--blog-bg); }
+    #blog .section-header {
+      border-bottom-color: rgba(194,133,90,0.35);
+      background: linear-gradient(90deg, transparent 60%, rgba(194,133,90,0.08));
+    }
+    #blog .section-tag  { color: var(--blog-accent); }
+    #blog .section-tag::after { background: var(--blog-accent); }
+    #blog .section-title em { color: var(--blog-accent); }
+    #blog .project-sidebar {
+      background: rgba(248,242,236,0.95);
+      border-right-color: rgba(194,133,90,0.2);
+    }
+    #blog .sidebar-label, #blog .sidebar-meta-label { color: var(--blog-accent); }
+    #blog .sidebar-divider { background: rgba(194,133,90,0.25); }
+    #blog .toc-link:hover { color: var(--blog-accent); }
+    #blog .project-content h3 { color: var(--blog-accent); }
+    #blog .project-content blockquote { border-left-color: var(--blog-accent); background: rgba(194,133,90,0.06); }
+    #blog .content-divider { background: rgba(194,133,90,0.2); }
+    /* Diagonal stripe texture for blog */
+    #blog .section-header::after {
+      content:''; position:absolute; top:0; right:0; width:200px; height:100%;
+      background: repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(194,133,90,0.05) 8px, rgba(194,133,90,0.05) 9px);
+      pointer-events:none;
+    }
+
+    /* =========================================
+       RHETORICAL ANALYSIS  –  dusty violet palette
+    ========================================= */
+    #rhetorical { background: var(--rhet-bg); }
+    #rhetorical .section-header {
+      border-bottom-color: rgba(112,112,168,0.35);
+      background: linear-gradient(90deg, transparent 60%, rgba(112,112,168,0.08));
+    }
+    #rhetorical .section-tag  { color: var(--rhet-accent); }
+    #rhetorical .section-tag::after { background: var(--rhet-accent); }
+    #rhetorical .section-title em { color: var(--rhet-accent); }
+    #rhetorical .project-sidebar {
+      background: rgba(242,242,248,0.95);
+      border-right-color: rgba(112,112,168,0.2);
+    }
+    #rhetorical .sidebar-label, #rhetorical .sidebar-meta-label { color: var(--rhet-accent); }
+    #rhetorical .sidebar-divider { background: rgba(112,112,168,0.25); }
+    #rhetorical .toc-link:hover { color: var(--rhet-accent); }
+    #rhetorical .project-content h3 { color: var(--rhet-accent); }
+    #rhetorical .project-content blockquote { border-left-color: var(--rhet-accent); background: rgba(112,112,168,0.06); }
+    #rhetorical .content-divider { background: rgba(112,112,168,0.2); }
+    /* Circular badge ornament */
+    #rhetorical .section-header::before {
+      content: 'ETHOS · PATHOS · LOGOS';
+      position: absolute; right: 3rem; top: 50%; transform: translateY(-50%);
+      font-size: 0.55rem; letter-spacing: 0.25em; color: rgba(112,112,168,0.4);
+      font-weight: 500;
+    }
+
+    /* =========================================
+       PROPOSAL  –  academic green palette
+    ========================================= */
+    #proposal { background: var(--prop-bg); }
+    #proposal .section-header {
+      border-bottom-color: rgba(90,138,122,0.35);
+      background: linear-gradient(90deg, transparent 60%, rgba(90,138,122,0.08));
+    }
+    #proposal .section-tag  { color: var(--prop-accent); }
+    #proposal .section-tag::after { background: var(--prop-accent); }
+    #proposal .section-title em { color: var(--prop-accent); }
+    #proposal .project-sidebar {
+      background: rgba(238,244,242,0.95);
+      border-right-color: rgba(90,138,122,0.2);
+    }
+    #proposal .sidebar-label, #proposal .sidebar-meta-label { color: var(--prop-accent); }
+    #proposal .sidebar-divider { background: rgba(90,138,122,0.25); }
+    #proposal .toc-link:hover { color: var(--prop-accent); }
+    #proposal .project-content h3 { color: var(--prop-accent); }
+    #proposal .project-content blockquote { border-left-color: var(--prop-accent); background: rgba(90,138,122,0.06); }
+    #proposal .content-divider { background: rgba(90,138,122,0.2); }
+    #proposal .proposal-tab.active { color: var(--prop-accent); border-bottom-color: var(--prop-accent); }
+    #proposal .proposal-tabs { border-bottom-color: rgba(90,138,122,0.3); }
+
+    /* =========================================
+       SELF-REFLECTION  –  soft lavender-mauve palette
+    ========================================= */
+    #reflection { background: var(--refl-bg); }
+    #reflection .section-header {
+      border-bottom-color: rgba(155,126,168,0.35);
+      background: linear-gradient(90deg, transparent 60%, rgba(155,126,168,0.08));
+    }
+    #reflection .section-tag  { color: var(--refl-accent); }
+    #reflection .section-tag::after { background: var(--refl-accent); }
+    #reflection .section-title em { color: var(--refl-accent); }
+    #reflection .note-intro { color: var(--refl-accent); border-left-color: rgba(155,126,168,0.5); }
+    #reflection .note-signature { border-top-color: rgba(155,126,168,0.4); color: #7a5a8a; }
+    #reflection::before {
+      content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+      background-image: radial-gradient(circle, rgba(155,126,168,0.12) 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+    #reflection .note-body { position: relative; z-index:1; }
+    .refl-prompt {
+      background: rgba(155,126,168,0.08);
+      border-left: 3px solid var(--refl-accent);
+      border-radius: 0 6px 6px 0;
+      padding: 1rem 1.4rem;
+      margin: 2rem 0 1rem;
+    }
+    .refl-prompt-label {
+      font-size: 0.6rem; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--refl-accent); margin-bottom: 0.4rem; font-weight: 500;
+    }
+    .refl-prompt p {
+      font-family: 'Playfair Display', serif; font-style: italic;
+      font-size: 0.95rem; color: #5a3a6a; line-height: 1.7; margin: 0 !important;
+    }
+
+    /* =========================================
+       SHARED SECTION STYLES
+    ========================================= */
+    .section-header {
+      padding: 4rem 3rem 2rem;
+      border-bottom: 1px solid rgba(123,155,174,0.3);
+      position: relative;
+    }
+    .section-tag {
+      font-size: 0.65rem; letter-spacing: 0.28em; text-transform: uppercase;
+      color: var(--blue); margin-bottom: 0.9rem;
+      display: flex; align-items: center; gap: 0.9rem;
+    }
+    .section-tag::after {
+      content: ''; display: block; width: 36px; height: 1px; background: var(--blue);
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 4vw, 3rem); font-weight: 700;
+      line-height: 1.1;
+    }
+    .section-title em { font-style: italic; color: var(--teal); }
+
+    /* ── AUTHOR'S NOTE layout ── */
+    .note-body { max-width: 720px; margin: 0 auto; padding: 3.5rem 3rem; }
+    .note-intro {
+      font-family: 'Playfair Display', serif; font-style: italic;
+      font-size: 1.2rem; color: var(--teal); margin-bottom: 2rem;
+      line-height: 1.7;
+      padding-left: 1.2rem;
+      border-left: 3px solid rgba(163,184,153,0.5);
+    }
+    .note-text { font-size: 1rem; line-height: 1.95; color: #2e3a2e; margin-bottom: 1.5rem; }
+    .note-text p { margin-bottom: 1.4rem; }
+    .note-signature {
+      margin-top: 3rem; border-top: 1px solid rgba(163,184,153,0.4);
+      padding-top: 2rem;
+      font-family: 'Playfair Display', serif; font-style: italic;
+      font-size: 1.15rem; color: #6a836a;
+    }
+
+    /* ── PROJECT LAYOUT ── */
+    .project-layout {
+      display: grid; grid-template-columns: 270px 1fr;
+      min-height: calc(100vh - 68px);
+    }
+    .project-sidebar {
+      background: var(--pale);
+      border-right: 1px solid rgba(123,155,174,0.25);
+      padding: 2.5rem 1.8rem;
+      position: sticky; top: 68px; height: calc(100vh - 68px);
+      overflow-y: auto;
+    }
+    .sidebar-label {
+      font-size: 0.62rem; letter-spacing: 0.28em; text-transform: uppercase;
+      color: var(--blue); margin-bottom: 1.4rem;
+    }
+    .sidebar-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.35rem; font-weight: 700; line-height: 1.3;
+      margin-bottom: 1.4rem; color: var(--ink);
+    }
+    .sidebar-divider { height: 1px; background: rgba(123,155,174,0.3); margin: 1.4rem 0; }
+    .sidebar-meta-item { margin-bottom: 1rem; }
+    .sidebar-meta-label {
+      font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--blue); margin-bottom: 0.25rem;
+    }
+    .sidebar-meta-value { font-size: 0.85rem; color: var(--mid); line-height: 1.5; }
+    .sidebar-toc { margin-top: 1.8rem; }
+    .toc-link {
+      display: block; font-size: 0.8rem; color: var(--mid);
+      padding: 0.4rem 0; border-bottom: 1px solid rgba(123,155,174,0.12);
+      cursor: pointer; transition: color 0.2s, padding-left 0.2s; text-decoration: none;
+    }
+    .toc-link:hover { color: var(--teal); padding-left: 4px; }
+
+    .project-content { padding: 3.5rem 4rem; max-width: 780px; }
+    .project-content h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.55rem; font-weight: 700; margin: 2.5rem 0 0.9rem;
+      color: var(--ink); line-height: 1.2;
+    }
+    .project-content h2:first-child { margin-top: 0; }
+    .project-content h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem; font-style: italic; margin: 1.8rem 0 0.7rem;
+      color: var(--teal);
+    }
+    .project-content p {
+      font-size: 0.96rem; line-height: 1.9; color: #2e3530; margin-bottom: 1.2rem;
+    }
+    .project-content blockquote {
+      border-left: 3px solid var(--blue);
+      padding: 0.9rem 1.5rem; margin: 2rem 0;
+      background: rgba(123,155,174,0.07);
+    }
+    .project-content blockquote p {
+      font-family: 'Playfair Display', serif; font-style: italic;
+      font-size: 1.02rem; color: var(--mid); margin: 0;
+    }
+    .content-divider { height: 1px; background: rgba(123,155,174,0.25); margin: 2.5rem 0; }
+    .placeholder-block {
+      width: 100%; height: 400px;
+      background-image: url('indiancuisinepic.jpg');
+      background-size: cover; background-position: center;
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+      
+    }
+    .placeholder-block::after {
+      content:''; position:absolute; inset:0;
+      background: linear-gradient(to top, rgba(248,242,236,0.3) 0%, transparent 50%);
+    }
+    .placeholder-block2 {
+      width: 50%; height: 200px;
+      background-image: url('lizardhappy.gif');
+      background-size: cover; background-position: center;
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+	.placeholder-block3 {
+      width: 50%; height: 400px;
+      background-image: url('ctm.png');
+      background-size: cover; background-position: center;
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+	.placeholder-block4 {
+      width: 50%; height: 400px;
+      background-image: url('kulfi.png');
+      background-size: cover; background-position: center;
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+	.placeholder-block5 {
+      width: 50%; height: 400px;
+      background-image: url('btn.jpg');
+      background-size: cover; background-position: center;
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+
+	.placeholder-block6 {
+      width: 50%; height: 300px;
+      background-image: url('lizardyelling.gif');
+      background-size: cover; background-position: center;
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+	.placeholder-block7 {
+  width: 10%; 
+  height: 100px;
+  background-image: url('lizardpanic.gif');
+  background-size: cover; 
+  background-position: center;
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+  position: relative;
+  margin: 0 auto; /* ← this centers it horizontally */
+}
+
+
+
+
+    /* Proposal tabs */
+    .proposal-tabs {
+      display: flex; gap: 0; margin-bottom: 2.5rem;
+      border-bottom: 2px solid rgba(123,155,174,0.25);
+    }
+    .proposal-tab {
+      padding: 0.7rem 1.5rem; cursor: pointer;
+      font-size: 0.74rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--mid); border-bottom: 2px solid transparent;
+      margin-bottom: -2px; transition: all 0.2s;
+      background: none; border-top: none; border-left: none; border-right: none;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .proposal-tab.active { color: var(--teal); border-bottom-color: var(--teal); }
+    .proposal-panel { display: none; }
+    .proposal-panel.active { display: block; }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse { 0%,100% { opacity:0.35 } 50% { opacity:0.9 } }
+    @keyframes shimmer {
+      0%   { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+    .fade-in { animation: fadeUp 0.7s cubic-bezier(.22,1,.36,1) both; }
+
+    /* Page-entry transition: slide-in from right */
+    .page.active .section-header {
+      animation: fadeUp 0.5s ease both;
+    }
+    .page.active .project-layout {
+      animation: fadeUp 0.6s 0.1s ease both;
+    }
+    .page.active .note-body {
+      animation: fadeUp 0.6s 0.1s ease both;
+    }
+
+    /* Hover glow on sidebar items */
+    .sidebar-meta-item { transition: transform 0.2s; }
+    .sidebar-meta-item:hover { transform: translateX(3px); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { gap: 1rem; }
+      .project-layout { grid-template-columns: 1fr; }
+      .project-sidebar { position: static; height: auto; }
+      .project-content { padding: 2rem 1.5rem; }
+      .section-header { padding: 3rem 1.5rem 1.5rem; }
+      #rhetorical .section-header::before { display:none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ NAV ══ -->
+<nav>
+  <div class="nav-logo" onclick="showPage('home')">Portfolio</div>
+  <ul class="nav-links">
+    <li><a href="#" onclick="showPage('home');return false;">Home</a></li>
+    <li><a href="#" onclick="showPage('authors-note');return false;">Author's Note</a></li>
+    <li><a href="#" onclick="showPage('blog');return false;">Blog</a></li>
+    <li><a href="#" onclick="showPage('rhetorical');return false;">Rhetorical</a></li>
+    <li><a href="#" onclick="showPage('proposal');return false;">Proposal</a></li>
+    <li><a href="#" onclick="showPage('reflection');return false;">Reflection</a></li>
+  </ul>
+</nav>
+
+<!-- ══ HOME ══ -->
+<section class="page active" id="home">
+  <div class="home-bg"></div>
+
+  <!-- Floating leaf particles -->
+  <div class="particles" id="particles"></div>
+
+  <!-- Decorative corner frame -->
+  <div class="home-frame"></div>
+  <div class="home-rule-top"></div>
+  <div class="home-rule-bottom"></div>
+
+  <div class="home-content">
+    <div class="home-eyebrow">Writing Portfolio</div>
+    <h1 class="home-title"> <em>Nguyen Thi Thanh Truc</em><br></h1>
+    <p class="home-sub">ENGLISH 160</p>
+<div class="placeholder-block7"><p></p></div>
+    <p class="home-desc">
+      ~ With Professor Heather Doble ~
+    </p>
+
+    <button class="home-cta" onclick="showPage('authors-note')">Enter Portfolio</button>
+  </div>
+  <div class="home-ornament">↓ &nbsp; scroll to explore &nbsp; ↓</div>
+</section>
+
+<!-- ══ AUTHOR'S NOTE ══ -->
+<section class="page" id="authors-note">
+  <div class="section-header">
+    <div class="section-tag">Introduction</div>
+    <h1 class="section-title">Author's <em>Note</em></h1>
+  </div>
+  <div class="note-body fade-in">
+    <p class="note-intro">
+      "Life is a journey."
+    </p>
+<div class="placeholder-block2"><p></p></div>
+    <div class="note-text">
+<p></p>
+      <p>
+       Hi! My name is Nguyen Thi Thanh Truc, a freshman student with an undecided major at the University of Illinois Chicago. I live by the quote “Life is a journey,” so I always want to try new things and get involved in as many activities as possible. However, although I have good social skills and a wide range of possibilities, things I can do, I found it difficult actually to focus and choose what I am actually passionate about. In addition, coming to a whole new country also takes time for me to actually get involved in the environment and improve my English skills, so I decided to enjoy my first year as much as I can. For my hobbies, I would say it is “trying new things”, yet I am doing archery, violin, and piano in my spare time now.
+
+      </p>
+      <p>
+In my English 160 class, I found it so difficult for me to perform well when English was not my first language. But whatever, “life is a journey”, and I was not alone to develop myself here when I still have friends and my English professor. That is also the reason why I use the lizard, a chill guy in nature with colorful skin that can adapt everywhere, and some trees as background, the environment that keeps the lizard jumping into every place it wants. In this last multimodal project, I will be reflecting on the various types of writing I have completed during my time in the English 160 class, including a blog, a rhetorical analysis, and a Proposal essay with its cover letter. To clarify, I will show how I have developed my writing skills throughout the process by writing outlines, drafts, and using feedback to finish the final drafts.
+
+      </p>
+          </div>
+    <div class="note-signature">
+      — Nguyen Thi Thanh Truc — <br>
+      <span style="font-size:0.85rem; color: var(--mid);">21 Apr 2026 / English 160 </span>
+    </div>
+  </div>
+</section>
+
+<!-- ══ BLOG ══ -->
+<section class="page" id="blog">
+  <div class="section-header">
+    <div class="section-tag">Project 1</div>
+    <h1 class="section-title">The <em>Blog</em></h1>
+  </div>
+  <div class="project-layout">
+    <aside class="project-sidebar">
+      <div class="sidebar-label">Project Details</div>
+      <div class="sidebar-title">The Strong Bonds of Multiple Flavors: Indian Cuisine
+</div>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-meta-item">
+        <div class="sidebar-meta-label">Genre</div>
+        <div class="sidebar-meta-value">Cuisine Blog</div>
+      </div>
+            <div class="sidebar-meta-item">
+        <div class="sidebar-meta-label">Word Count</div>
+        <div class="sidebar-meta-value">~1140 words total</div>
+      </div>
+      <div class="sidebar-meta-item">
+        <div class="sidebar-meta-label">Published</div>
+        <div class="sidebar-meta-value">[04 Feb. 2026.]</div>
+      </div>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-toc">
+        <div class="sidebar-label">Contents</div>
+        <a class="toc-link">Introduction</a>
+        <a class="toc-link">Indian Food</a>
+        <a class="toc-link">Chicken Tikka Masala</a>
+        <a class="toc-link">Pitaschio Kulfi</a>
+        <a class="toc-link">The Connection of Vietnamese Cuisine and Indian Cuisine</a>
+        <a class="toc-link">Citations</a>
+      </div>
+    </aside>
+    <main class="project-content fade-in">
+      <h2>The Strong Bonds of Multiple Flavors: Indian Cuisine</h2>
+      <p><em>Submitted by: Nguyen Thi Thanh Truc · 02/04/2026 · English 160 / University of Illinois Chicago</em></p>
+ 	<div class="content-divider"></div>
+
+      <div class="placeholder-block"><p></p></div>
+	<h3> Author's Message </h3>
+<p>In my ENGL 160 class, one of the first major assignments I completed was an Indian cuisine blog. Through this project, I learned how to communicate more effectively through writing and how to connect with readers engagingly. Writing a blog is different from traditional essays because it requires a more personal and appealing tone to attract an audience.
+At first, I found it challenging to connect my ideas clearly with the topic I chose. I also struggled with making my writing interesting enough to capture readers’ attention. However, through multiple drafts and feedback from my professor and classmates, I was able to significantly improve my blog. Their suggestions helped me better organize my ideas and refine my writing style.
+Overall, this assignment helped me understand the importance of audience awareness and revision. It showed me that strong writing often comes from rewriting and collaboration, not just the first draft.</p>
+
+
+
+      <h2>Introduction</h2>
+      <p>
+     I still remember the first time I tried Indian cuisine in the United States. Though I have heard from my friends and family about the concerns of Indian food that the flavor is not good because of their spices, I still want to have their meals for once. In my point of view, the videos and negative comments on the internet are not quite correct because they are not clean or safe to eat, as there are a lot of people who still love Indian cuisine and grew up with it, as well as having good health. So, why do I have to hesitate to try out? </p>
+	<p>
+The first month in Chicago, I saw that there are many Indian restaurants here. I did ask my Vietnamese friend to come, but the result is that I have to order it home to have it by myself. Out of expectations, the flavor of Indian cuisine is amazing; it has all the best spices in one meal, though their spices seem to be can not combine at first. Also, the nutrients in spices like turmeric, ginger, and cardamom are very good for health and skin, especially for women's glow up. As a result, I want to change my friends' stereotype of Indian food, so I ordered again and forced them to eat. Luckily, they have changed their mind and have been obsessed with Indian food like me. Also, my Indian friends have a huge community in the university. The connection of the people should be admirable through their sharing and caring towards others, especially through their cuisine.  From then till now, I have to order Chicken Tikka Masala and Pistachio Kulfi at least once a week, and go to the Indian restaurant to try other meals with my friends sometimes. In other words, I am obsessed with Indian cuisine already, and they actually somehow brought more kinship for both me and my people and foreign friends.
+
+      </p>
+
+      <div class="content-divider"></div>
+
+      <h2>Indian food</h2>
+      <p>
+        India has always been famous for its diversity of spices and the thoroughness in the process of preparing a meal. With a background in Indian spices, their cuisines are remarkable and popular around the world.“Cooking is about bringing together a multitude of different components to craft something coherent. It’s like storytelling, from ingredients, that delights and excites.” (“Indian Cuisine Meets the World: How Chefs Are Redefining Tradition”). And their cuisine actually amazed me in the very first bite. Nonetheless, they do not just have the diversity in flavors; Indian cuisines also have different dishes, not just “Curry.” (“Ravindranath”) 
+      </p>
+      <p>
+        Last but not least, the difference of region and history also make Indian cuisine more diverse and unique at the same time. For example, the dishes from North of India can be more spicy and rich favor, compared to the light diet from the South of India (“An Overview of India’s Regional Cuisines”). Actually, the diversity and changes in dishes make Indian people also want to try out their own cuisine more, without any boundaries or differences in their hometowns.
+
+      </p>
+
+      <blockquote><p>"[Insert a relevant quote, statistic, or pull quote that anchors this section.]"</p></blockquote>
+
+      <h2>Chicken Tikka Masala</h2>
+      <p>
+        The first meal that I ordered and became my favourite was Chicken Tikka Masala with naans. The flavor is so incredible that I want to discover their cuisine, and they are easier to make than I expected, with most nutrients we should have, especially for the spices. With tikka and masala, the chicken was cooked slowly, and some cream was added, which makes the flavor so creamy and addictive (“Swasthi”). 
+      </p>
+
+<div class="placeholder-block3"><p></p></div>
+
+    <div class="note-text">
+
+      <p>
+        A fun fact about the dish Chicken Tikka Masala is that it has been influenced by the Butter Chicken, from the British in the 1970s. However, there are some slight differences in the Chicken Tikka Masala dish due to its spiciness and less butter, which makes the dish more popular and recognizable (“History of Chicken Tikka Masala”). The brave step of combining more spices in a comfort dish have make India the key to this special dish, Chicken Tikka Masala. Although the originals are still debating, this dish still captures the hearts of people all around the worlds
+
+      </p>
+
+     <h2>Pitaschio Kulfi</h2>
+       <div class="placeholder-block4"><p></p></div>
+<p></p>
+      <p>As a person who is addicted to ice cream, I ordered Pistachio Kulfi at first. However, I was not a fan of pistachio ice cream before due to the chemical flavor they have, so I expected that a homemade ice cream would have a difference. And they did make my day, the flavor and texture were way too tasty. By making with pistachio, saffron, and milk, the texture was creamy with a bit crunchy of pistachio (“Easy Malai Kulfi”). I also ordered another Indian dessert to try out, as I watched a lot of Bollywood before, but they are not as addictive as Kulfi. I would try more Indian desserts if I could save money next month.
+	</p>
+
+      <h2>The Connection of Vietnamese Cuisine and Indian Cuisine</h2>
+
+	<div class="placeholder-block5"><p></p></div>	
+
+      <p>Although some Vietnamese are still being concerns for Indian cuisines due to negative YouTube reviewers that their dishes are not good, Indian cuisine has influenced Vietnamese cuisine for a really long time, along with many Asian countries. Every famous dish, like Pho, Bun Thit Nuong, and Ga Quay, has used spices that have been imported from India since the very first century. I also have some “Vietnamese” chicken curry in my home. As I pursue myself more in trying Indian cuisine, I can see a stronger connection with my Vietnamese dishes. Somehow, having different cuisines like Indian food connects me with my hometown and friends from other countries, as we are studying in the United States.
+	</p>
+
+
+
+      <div class="content-divider"></div>
+
+      <h2>Citations</h2>
+      <p>
+        “Pinterest Pin.” Pinterest, www.pinterest.com/pin/168181367334458761/. Accessed 17 Feb. 2026.
+	</p>
+	
+	<p>
+	“Indian Cuisine Meets the World: How Chefs Are Redefining Tradition.” Times Now News, https://www.timesnownews.com/lifestyle/food/news/indian-cuisine-meets-the-world-how-chefs-are-redefining-tradition-article-11942065. Accessed 19 Feb. 2026.
+      </p>
+
+	<p>
+Ravindranath, Divya. “Beyond Curry: Decolonising the Way We Talk About Indian Food.” GOYA, 21 Jan. 2025, https://www.goya.in/blog/beyond-curry-decolonising-the-way-we-talk-about-indian-food
+      </p>
+
+	<p>
+	“An Overview of India’s Regional Cuisines.” Sukhi’s, 6 Sept. 2022, https://sukhis.com/an-overview-of-indias-regional-cuisines/. Accessed 19 Feb. 2026.
+      </p>
+
+	<p>
+	Maehashi, Nagi. “Chicken Tikka Masala.” RecipeTin Eats, 6 Apr. 2018, https://www.recipetineats.com/tachyon/2018/04/Chicken-Tikka-Masala_0-SQ.jpg. Accessed 19 Feb. 2026.
+      </p>
+
+	<p>
+Swasthi. “Chicken Tikka Masala.” IndianHealthyRecipes, updated 9 May 2024, https://www.indianhealthyrecipes.com/chicken-tikka-masala/. Accessed 19 Feb. 2026.
+      </p>
+
+	<p>
+	“History of Chicken Tikka Masala.” Sukhi’s, https://sukhis.com/history-chicken-tikka-masala/. Accessed 19 Feb. 2026.
+      </p>
+
+	<p>
+	“Easy Malai Kulfi.” Allrecipes, submitted by Susmita, updated 30 Oct. 2022, https://www.allrecipes.com/recipe/210541/easy-malai-kulfi/. Accessed 19 Feb. 2026.
+      </p>
+
+
+
+	<p>
+	“Bún Thịt Nướng.” Unispice, unispice.vn, https://unispice.vn/wp-content/uploads/2024/03/bun-thit-nuong.jpg. Accessed 19 Feb. 2026.
+
+      </p>
+    </main>
+  </div>
+</section>
+
+<!-- ══ RHETORICAL ANALYSIS ══ -->
+<section class="page" id="rhetorical">
+  <div class="section-header">
+    <div class="section-tag">Project 2</div>
+    <h1 class="section-title">Rhetorical <em>Analysis</em></h1>
+  </div>
+  <div class="project-layout">
+    <aside class="project-sidebar">
+      <div class="sidebar-label">Project Details</div>
+      <div class="sidebar-title">Morality in the Minneapolis Community in the Fight Against ICE
+</div>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-meta-item">
+        <div class="sidebar-meta-label">Text Analyzed</div>
+        <div class="sidebar-meta-value">Hungry Families, ICE and Secret Grocery Networks in Minneapolis. / Brett Anderson</div>
+      </div>
+      <div class="sidebar-meta-item">
+        <div class="sidebar-meta-label">Rhetorical Strategies</div>
+        <div class="sidebar-meta-value">Ethos · Pathos · Logos</div>
+      </div>
+      <div class="sidebar-meta-item">
+        <div class="sidebar-meta-label">Word Count</div>
+        <div class="sidebar-meta-value">~786 words total</div>
+      </div>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-toc">
+        <div class="sidebar-label">Contents</div>
+        <a class="toc-link">Introduction</a>
+        <a class="toc-link">Analysis</a>
+        <a class="toc-link">Conclusion</a>
+      </div>
+    </aside>
+    <main class="project-content fade-in">
+      <h2>Morality in the Minneapolis Community in the Fight Against ICE</h2>
+	<p><em>Submitted by: Nguyen Thi Thanh Truc · 02/27/2026 · English 160 / University of Illinois Chicago</em></p>
+	 <div class="content-divider"></div>
+
+      <h3>Author's note</h3>
+      <p>
+        The rhetorical analysis was the most challenging assignment for me in ENGL 160. Personally, I am not very interested in reading, so having to read and analyze an article carefully felt difficult and unmotivating at first. It required a level of focus and critical thinking that I was not used to.</p>
+<p>Despite these challenges, I learned valuable skills from this assignment. By studying rhetorical strategies such as ethos, pathos, and logos, I began to understand how writers persuade and influence their audiences. This helped me see writing in a new way, not just as communication, but as a tool for persuasion.</p>
+<p>Although I did not feel very motivated while working on this assignment, the step-by-step guidance from class activities helped me complete it successfully. In the end, I gained a better understanding of how arguments are constructed and how to analyze them effectively.
+      </p>
+     
+      <div class="content-divider"></div>
+
+      <h2>Introduction</h2>
+      <p>
+        At the moment, immigrants in the United States have to face one of the biggest problems, being forced to leave their homes, due to the threat from ICE. Throughout the article “Hungry Families, ICE and Secret Grocery Networks in Minneapolis”, Brett Anderson has effectively used the reports from other news and some organizations that are helping immigrants to show how they embrace each other and suffer with the risk of deportation, as well as asking for more support from all people in the US to get out of the ICE. In his informative and compelling article, journalist Brett Anderson successfully illustrates emotional anecdotes and statistics to draw a whole picture of the hardship of immigrant enforcement, disrupted access to food, and daily needs.
+      </p>
+
+     
+
+     <h2>Analysis</h2>
+      <p>
+        Brett Anderson starts by demonstrating the significant influence the enforcement activities of the U.S. Immigration and Customs Enforcement (“ICE”) have had on the lives of immigrants. Anderson begins his piece by stating that after Renee Good was shot by the ICE agents on January 7, Partnership Academy, in Minneapolis, has been fully remote due to over 60 percent of their students having to stay home, which also cuts a source of food for immigrant students. By starting his piece in such a manner, Anderson can emphasize the tangible influence ICE’s activities have on the nation’s immigration policies. The fact that Anderson can point out specific dates in his piece further emphasizes the importance of the subject matter and the need for the reader to understand the reality of the situation.
+
+      </p>
+      <p>
+        Anderson continues to add ethos to the issue by highlighting the struggles that immigrant families face as a result of the fear instilled by ICE’s activities. There are also stories like Wilson Quizhpi Cuzco, who, despite being a U.S. citizen and having served in the Marine Corps, stands guard outside of his family’s grocery store to alleviate people’s fears. This shows that, despite being legal citizens, people are having to change their lives as a result of the fear instilled by ICE’s activities. On the other hand, teachers like Annie Olson are having to conduct classes in an empty classroom as many students are choosing to stay away from school. Another point raised by Anderson is that many are having to face the changes to the Supplemental Nutrition Assistance Program. These elements, therefore, show that the struggles faced by immigrants are not only those of the government but also those of fear, making it a double problem for the immigrants. From the above, it is clear that the struggles faced by immigrants are many, as shown by the different elements of the issue.
+      </p>
+	<p> 
+	As a result of these hardships, Anderson also describes the community-based responses that are attempting to fill the void created by the absence of traditional community organizations. These volunteers and mutual aid societies, such as those organized out of basements and barbershop doors, are becoming a lifeline in the delivery of food and supplies, as well as emotional support for families too afraid to venture out of their homes. For example, a volunteer named Gabriela describes how her work is motivated not just by the need to provide for her family because of economic necessity but also by a sense of motherhood, demonstrating the power of personal compassion in community-based resistance. These types of community-based responses, from the organized distribution centers in school cafeterias to the decentralized delivery networks through messaging apps, demonstrate a community’s creative and resilient response to exclusion. Anderson’s use of direct quotes from volunteers and community organizers, along with evocative descriptions of community-based acts of solidarity, also highlights the community-based responses.
+	</p>
+
+      <h2>Conclusion</h2>
+      <p>
+        Overall, Brett Anderson’s article presents an effective and impactful message regarding the indirect but impactful effects of aggressive immigration and customs enforcement on immigrant communities, especially in Minneapolis. By presenting statistical data alongside individual stories, Anderson shows that immigration and customs enforcement operations change schools, neighborhoods, and even food supplies into environments of fear and hunger. Anderson’s rhetorical approach is effective because it presents individual stories, expert opinions, and explanations that support the main argument that immigration and customs enforcement operations use fear to attack communities and undermine basic services. Overall, Anderson’s article challenges readers to think of immigration and customs enforcement operations not merely as immigration and customs enforcement operations but as something that has far-reaching impacts on how families access food, education, and safe environments.
+
+      </p>
+   <h3>Works Cited / References</h3>
+        <div class="">
+<p>
+Anderson, Brett. “Hungry Families, ICE and Secret Grocery Networks in Minneapolis.”
+The New York Times, 9 Feb. 1  2026,  
+www.nytimes.com/2026/02/09/dining/minneapolis-ice-grocery-networks.html. Accessed 12 March 2026.
+</p>
+      </div>
+    </main>
+  </div>
+
+</section>
+
+<!-- ══ PROPOSAL + COVER LETTER ══ -->
+<section class="page" id="proposal">
+  <div class="section-header">
+    <div class="section-tag">Project 3</div>
+    <h1 class="section-title">Proposal & <em>Cover Letter</em></h1>
+  </div>
+  <div class="project-layout">
+    <aside class="project-sidebar">
+      <div class="sidebar-label">Project Details</div>
+      <div class="sidebar-title">The Reality of International Student Programs at UIC</div>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-meta-item">
+        <div class="sidebar-meta-label">Type</div>
+        <div class="sidebar-meta-value">Formal Proposal + Cover Letter</div>
+      </div>
+      <div class="sidebar-meta-item">
+        <div class="sidebar-meta-label">Addressed To</div>
+        <div class="sidebar-meta-value">Marie Lynn Miranda / Office of the Chancellor</div>
+      </div>
+      <div class="sidebar-meta-item">
+        <div class="sidebar-meta-label">Topic / Problem</div>
+        <div class="sidebar-meta-value">The Reality of International Student Programs at UIC</div>
+      </div>
+      <div class="sidebar-meta-item">
+        <div class="sidebar-meta-label">Word Count</div>
+        <div class="sidebar-meta-value">~1810 words total</div>
+      </div>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-toc">
+        <div class="sidebar-label">Documents</div>
+        <a class="toc-link" onclick="switchTab('cover-letter')">Cover Letter</a>
+        <a class="toc-link" onclick="switchTab('proposal-body')">Full Proposal</a>
+      </div>
+    </aside>
+    <main class="project-content fade-in">
+      <div class="proposal-tabs">
+        <button class="proposal-tab active" id="tab-cover-letter" onclick="switchTab('cover-letter')">Cover Letter</button>
+        <button class="proposal-tab" id="tab-proposal-body" onclick="switchTab('proposal-body')">Proposal</button>
+      </div>
+
+      <!-- COVER LETTER PANEL -->
+      <div class="proposal-panel active" id="cover-letter">
+        <h2>Cover Letter</h2>
+        <p><em>Nguyen Thi Thanh Truc</em><br>
+        312 South Peoria Street,<br>
+       Chicago, IL 60607<br>
+	312-409-3802<br>
+	tnguy411@uic.edu<br>
+	03/20/2026</p>
+
+        <p>Marie Lynn Miranda<br>
+        Office of the Chancellor <br>
+      University of Illinois Chicago<br>
+	601 S. Morgan St., 2833 UH, Chicago, IL 60607-7128 (MC 102)<br>
+       Phone: 312.413.3350 chancellor@uic.edu</p>
+
+        <p>Dear Marie Lynn Miranda,</p>
+
+        <p>
+          My name is Nguyen Thi Thanh Truc, a freshman international student. At the moment, many international students are experiencing a negative impact on their mental health because they are being put into programs that were not previously informed about before coming to UIC, which are AAP, EAP, and Pre-Sessional. 
+        </p>
+        <p>
+          In my attached proposal, I have pointed out the problems and argued that, instead of trying to get as many international students as possible, UIC must be clearer in providing more information about the programs before deciding to move to a new country. Since many of us are leaving our families, sacrificing our finances and our mental and social health to attend college in the U.S., I believe we deserve to equally receive a program that strictly allows us to finish our education more easily and efficiently based on our IELTS score, not the placement test or iTEP. This proposal considers students' success, growth, performance, and even their mental lives. Not to talk too negatively, but the effect of these programs on students’ lives might be even worse than what I wrote in the proposal. Because I am one of the international students, I have seen some of my friends have a worse situation than I, and now they have no motivation or confidence to continue in our university. 
+
+        </p>
+        <p>
+          I believe my proposal will urge you to take action and consider ways to improve international students' lives and achieve equality effectively, since I see that your office covers most of our university. If you wish to contact me, here is my phone number, 3124093802, and my email tnguy411@uic.edu. I would like to look forward to meeting with you in the near future. Thank you for your attention.
+
+        </p>
+
+        <p>
+          Sincerely,<br><br>
+          <em>Nguyen.</em><br>
+          [Nguyen Thi Thanh Truc]<br>
+          [tnguy411@uic.edu / 312-409-3802]
+        </p>
+      </div>
+
+      <!-- PROPOSAL PANEL -->
+      <div class="proposal-panel" id="proposal-body">
+        <h2>The Reality of International Student Programs at UIC </h2>
+        <p><em>Submitted by: Nguyen Thi Thanh Truc · 03/20/2026 · English 160 / University of Illinois Chicago</em></p>
+
+        <div class="content-divider"></div>
+
+        <h3>Author's message</h3>
+        <p>
+          The proposal essay and its cover letter were the most interesting assignments for me in ENGL 160. Unlike the previous projects, this assignment focused on presenting a real-world problem and offering a persuasive solution in a professional format, which is the international student programs at UIC. So, I found this approach more engaging and meaningful.</p>
+<p>I chose to write about issues related to international student programs, which made it easier for me to connect with the topic and develop my ideas. Because I could relate to the problem, I was able to organize my thoughts more clearly and communicate my message effectively to the reader.</p>
+<p>However, one major challenge I faced was finding reliable resources. Due to limited or hidden information, researching relevant sources was difficult. Fortunately, my professor supported me throughout the process and helped guide my research, making it easier to complete the assignment.</p>
+<p>This project helped me improve my ability to write persuasively and professionally. It also showed me the importance of strong evidence in supporting arguments.
+        </p>
+
+        <h2>Statement of the Problem</h2>
+        <p>
+          Every year, thousands of students around the globe leave their home countries in pursuit of an education they hope will transform their lives. They carry with them years of preparation, significant financial investment, and an unwavering belief in the promise of studying abroad. However, at the University of Illinois Chicago, some programs like EAP (English for Academic Purposes) and AAP (Academic Accelerator Program) for international students make people very worried about fairness and openness because some students do not fully understand and agree to take additional time to study and pay more money when they applied. These programs are marketed as helpful, but they can hurt students financially and mentally at the same time. International students, many of whom are navigating a new language, culture, and legal system for the first time, are placed in a position where they must accept expensive supplementary programs without fully understanding what they are agreeing to. This is frustrating, slows down academic progress, and costs more. UIC must provide clear information and policies and make them accessible to all students, provide academic support by renaming programs that are more accurately described, and reconsider the conditional admissions for selecting students.
+        </p>
+	<p>A core problem for this issue is the fundamental lack of clarity in how UIC communicates its admission and academic pathways for international students. Although international students get their acceptance letter from the college and are ready to go to the state, they still need to do the placement test, besides the previous requirements, and take some programs that they originally did not know and did not want to attend. Additionally, the titles of those information websites, like “Before you start,” did not match and were too general for the information students need, making it hard for students to research enough to understand and learn about the university.
+	</p>
+
+        <p>
+The placement test is a big problem in itself for several reasons. First, it does not sufficiently qualify the trust and also does not clarify the English skills a student should have, such as IELTS or TOEFL. Like iTEP, one of the placement tests from UIC, was taken by students when they are at home with a look down browser. To be clear, the time that students are taking was during the summer, at their home, where they can use other devices to help them cheat as well, not like going to an IELTS test and taking it directly by themselves with an actual supervisor. UIC might take the score of IELTS to select students who are qualified to go to international direct or not, but they can take students from AAP to EAP or even the Pre-Session program randomly, without clarifying the reason enough, and force them to spend more money in those programs, not like what they are showing on their website for those programs. 
+
+        </p>
+
+	<p>
+Secondly, and importantly, it is administered after the student has already committed to attending UIC, which means they have little recourse if they disagree with the result. Placement tests often lead to students being moved to a different class, which may not be what they expected or what they were qualified for. Especially, UIC was saying but not showing much that the placement program would be decided when students arrive on the campus. Because of this, students might feel like they were tricked and forced to pay for extra classes that weren't clearly explained ahead of time.
+	</p>
+
+        <blockquote><p>"[Support your problem statement with a compelling quote or data point.]"</p></blockquote>
+
+	<p>
+	Moreover, the financial consequences of this opacity are severe. EAP and AAP courses are not free additions to a student's program. They represent additional tuition charges that were not factored into a student's original budget. Originally, international students already pay a much more expensive tuition than students from the United States, but after those programs that were hidden, they have to pay even more. The reason why students still accept paying extra is that they have already paid a lot to get to the United States and give the school tuition already, the program was out of their foresight, especially since they are foreigners who are not fluent in English, unlike people growing with it in the state. Some families will face this as a hardship for their financial situation and might even take out loans to help their children get an education here. Yet, one other question, students who do not directly deal with those financial problems, can they focus on their career or perform well for their future job? No, absolutely not. How strong can they be when they have to know their parents are sacrificing and living alone in a strange country?
+</p>
+	<p>
+ 	As a result, many international students were experiencing depression to keep themselves alive here as they have to, and some even lose themselves to do what they like and forget about their passion, which hardly affected their future career. Especially, what if they can try to get some jobs and work that is illegal or not acceptable for international students because of their financial hardships, and lose all of their future afterwards? People attend college to make their pathway clearer and easier to get a job, not to waste money or make themselves worse.
+	</p>
+
+        <h2>Proposed Solution</h2>
+        <p>
+          A good way to fix this is to change the names of programs like EAP and Pre-Session to "pre-college programs." For example, at Northwestern University, they have their online Pre-College programs for high school students to better prepare them to go to college, from 2 to 4 weeks at an affordable price. Hence, the university should clarify this to student efficiency, not like putting some words on a website that is hard to find and forcing students to choose “this is what you choose”. Since international students have already been struggling with a language that they are not familiar with, it is also hard for them to speak up or actually understand the problem that they are in. Especially, the placement test results should be clear and accessible for student who disagree with their results so they can actually look and easily understand their condition. This would help people have more realistic expectations and be less disappointed. 
+
+        </p>
+        <p>
+          Second, UIC must improve how it communicates the possibility of program placement to prospective students. Although that information is available on the UIC website, but only available when we search for the right words for it and open each part of the website to find the programs that are hidden. Especially for the school tuition, UIC must create a new website page for students to access the information more easily and understandably. 
+
+        </p>
+        <p>
+          Thirdly, a more ethical approach would be to set clear, firm admissions standards that reflect the actual requirements for beginning degree coursework, and to offer conditional admission only to students who are genuinely close to meeting those standards. Like in the University of Illinois Urbana - Champaign, they put on their website for international applicants that student must match their requirements to attend their college. UIC should better select students to attend, instead of just focusing on making financial gain through international students. So that students can meet other students who are at their level to continue developing themselves, as well as not having disappointment for their programs and campus life.
+
+        </p>
+        
+        <h2>Expected Outcomes</h2>
+        <p>
+          These changes would make people more honest, keep students safe, and make the institution more trustworthy. Universities need to be responsible by making sure that their admissions and support systems are fair and open. To make sure that international students are treated with respect and dignity, it is important to communicate clearly and follow ethical guidelines.
+
+        </p>
+
+        <div class="content-divider"></div>
+
+        <h2>Conclusion</h2>
+        <p>
+          The University of Illinois Chicago needs to change the way their programs are set up and make sure that students know all of their options before they sign up. This way, international education will stay an opportunity and not a burden. The key is creating a friendly and positive environment, not pointing or forcing students to accept that they are bad and that there is no bright future in front of them. University is a place to help students get to their career more easily, without losing their hopes or passion that they originally had.
+
+        </p>
+
+        <h3>Works Cited / References</h3>
+        <div class="">
+<p>
+University of Illinois Chicago Global. Undergraduate Admissions. UIC Global, https://global.uic.edu/undergraduate-admissions/. Accessed 20 Mar. 2026.</p>
+
+<p>University of Illinois Chicago Global. Before You Start. UIC Global, https://global.uic.edu/before-you-start/. Accessed 20 Mar. 2026.</p>
+
+<p>Northwestern University. “Northwestern Pre-College Online Program.” Northwestern Pre-College Online Program, https://precollege.northwestern.edu/. Accessed 10 Apr. 2026. </p>
+
+<p>University of Illinois Urbana-Champaign, Office of Undergraduate Admissions. “International Applicants.” University of Illinois Urbana-Champaign Admissions, https://www.admissions.illinois.edu/Apply/international. Accessed 10 Apr. 2026.</p></div>
+      </div>
+    </main>
+  </div>
+</section>
+
+<!-- =============================================
+     SELF-REFLECTION PAGE
+     ============================================= -->
+<section class="page" id="reflection">
+  <header class="section-header">
+    <div class="section-tag">Self-Reflection</div>
+    <h1 class="section-title">Looking Back, <em>Moving Forward</em></h1>
+  </header>
+
+  <div class="note-body" style="max-width:760px;">
+ <div class="placeholder-block6"><p></p></div>          
+ <div class="content-divider"></div>
+	<p> </p><p> </p>
+
+	<p>
+       Throughout the process of writing in my English 160 class, I appreciated that I was able to catch up with my classmates, even though I was overwhelmed at first. I can see that I have grown a lot, not just as a writer, but also as a college student in the United States.  Although English is my second language and there are a lot of major projects throughout the semester, I still see that I have developed a lot through my process here. Each project has its own way of writing, which is also challenging and stressful sometimes. By the end of the semester, I have learned how to adapt better and be a critical thinker, as well as being more confident in expressing my ideas in writing. I will continue to involve myself in my writing journey, where I will continue to learn more ways to express my ideas and develop myself better for my future work.
+      </p>
+      
+
+      <div class="note-signature">
+        — Nguyen Thi Thanh Truc &nbsp;·&nbsp; ENG 160, Spring 2025
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  /* ── PAGE SWITCHING ── */
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    const target = document.getElementById(id);
+    if (!target) return;
+    target.classList.add('active');
+    window.scrollTo(0, 0);
+    // Re-trigger fade animations
+    target.querySelectorAll('.fade-in').forEach(el => {
+      el.style.animation = 'none';
+      el.offsetHeight;
+      el.style.animation = '';
+    });
+  }
+
+  /* ── PROPOSAL TABS ── */
+  function switchTab(panelId) {
+    document.querySelectorAll('.proposal-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.proposal-tab').forEach(t => t.classList.remove('active'));
+    const panel = document.getElementById(panelId);
+    const tab   = document.getElementById('tab-' + panelId);
+    if (panel) panel.classList.add('active');
+    if (tab)   tab.classList.add('active');
+  }
+
+  /* ── PARTICLE GENERATOR ── */
+  (function() {
+    const container = document.getElementById('particles');
+    const colors = [
+      'rgba(123,155,174,0.35)',
+      'rgba(61,96,112,0.25)',
+      'rgba(138,171,181,0.3)',
+      'rgba(200,218,228,0.4)',
+      'rgba(163,184,153,0.3)',
+    ];
+    for (let i = 0; i < 22; i++) {
+      const el = document.createElement('div');
+      el.className = 'particle';
+      const size = 4 + Math.random() * 14;
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      const left = Math.random() * 100;
+      const dur  = 7 + Math.random() * 10;
+      const delay = Math.random() * -12;
+      const drift = (Math.random() - 0.5) * 120;
+      const op   = 0.2 + Math.random() * 0.4;
+      el.style.cssText = `
+        width:${size}px; height:${size * 0.6}px;
+        background:${color};
+        left:${left}%;
+        --dur:${dur}s;
+        --delay:${delay}s;
+        --drift:${drift}px;
+        --op:${op};
+        border-radius:50% 0 50% 0;
+        transform: rotate(${Math.random()*360}deg);
+      `;
+      container.appendChild(el);
+    }
+  })();
+
+  /* ── NAV ACTIVE STATE ── */
+  const pageIds = ['home','authors-note','blog','rhetorical','proposal','reflection'];
+  const navLinks = document.querySelectorAll('.nav-links a');
+  function updateNavActive(id) {
+    navLinks.forEach((a, i) => {
+      a.style.color = pageIds[i] === id ? 'var(--teal)' : '';
+    });
+  }
+  // Wrap showPage to also update nav
+  const _showPage = window.showPage;
+  window.showPage = function(id) {
+    _showPage(id);
+    updateNavActive(id);
+  };
+  updateNavActive('home');
+</script>
+</body>
+</html>
